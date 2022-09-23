@@ -28,7 +28,7 @@ CREATE TABLE pacientes (
   apellidoPaciente varchar(50) NOT NULL,
   domicilioPaciente varchar(50) NOT NULL,
   dniPaciente varchar(50) NOT NULL,
-  fechaAltaPaciente datetime NOT NULL,
+  fechaDeAltaPaciente datetime NOT NULL,
   PRIMARY KEY (idPaciente)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

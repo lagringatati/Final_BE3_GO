@@ -13,4 +13,14 @@ type StoreInterface interface {
 	Delete(id int) error
 	// Exists verifica si un odontologo existe
 	//Exists(matriculaOdontologo string) bool
+	// ReadPaciente devuelve un paciente por su id
+	ReadPaciente(id int) (domain.Paciente, error)
+	// CreatePaciente agrega un nuevo paciente
+	CreatePaciente(paciente domain.Paciente) error
+	// UpdatePaciente actualiza un paciente
+	UpdatePaciente(paciente domain.Paciente) error
+	// DeletePaciente elimina un paciente
+	DeletePaciente(id int) error
+	// ExistsPaciente verifica si un paciente existe
+	//ExistsPaciente(dniPaciente string) bool
 }

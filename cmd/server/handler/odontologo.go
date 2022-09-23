@@ -140,7 +140,7 @@ func (h *odontologoHandler) UpdateOdontologoForField() gin.HandlerFunc {
 		}
 		_, err = h.s.GetByID(id)
 		if err != nil {
-			web.Failure(c, 404, errors.New("ODONTOLOGO INEXISTENTE"))
+			web.Failure(c, 404, errors.New("ID DE ODONTOLOGO INEXISTENTE"))
 			return
 		}
 		if err := c.ShouldBindJSON(&r); err != nil {

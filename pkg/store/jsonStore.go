@@ -12,6 +12,7 @@ type jsonStore struct {
 	pathToFile string
 }
 
+// /////////////////////////////////////////////////////////ODONTOLOGOS//////////////////////////////////////////////////////////////
 // loadOdontologos carga los odontologos desde un archivo json
 func (s *jsonStore) loadOdontologos() ([]domain.Odontologo, error) {
 	var odontologos []domain.Odontologo
@@ -104,6 +105,106 @@ func (s *jsonStore) Delete(id int) error {
 	}
 	for _, p := range odontologos {
 		if p.MatriculaOdontologo == matriculaOdontologo {
+			return true
+		}
+	}
+	return false
+}
+*/
+
+// /////////////////////////////////////////////////////////PACIENTES//////////////////////////////////////////////////////////////
+// loadPacientes carga los pacientes desde un archivo json
+func (s *jsonStore) loadPacientes() ([]domain.Paciente, error) {
+	var pacientes []domain.Paciente
+	file, err := os.ReadFile(s.pathToFile)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal([]byte(file), &pacientes)
+	if err != nil {
+		return nil, err
+	}
+	return pacientes, nil
+}
+
+// savePacientes guarda los pacientes en un archivo json
+func (s *jsonStore) savePacientes(pacientes []domain.Paciente) error {
+	bytes, err := json.Marshal(pacientes)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(s.pathToFile, bytes, 0644)
+}
+
+// NewJsonStorePaciente crea un nuevo store de pacientes
+func NewJsonStorePaciente(path string) StoreInterface {
+	_, err := os.Stat(path)
+	if err != nil {
+		panic(err)
+	}
+	return &jsonStore{
+		pathToFile: path,
+	}
+}
+
+func (s *jsonStore) ReadPaciente(id int) (domain.Paciente, error) {
+	pacientes, err := s.loadPacientes()
+	if err != nil {
+		return domain.Paciente{}, err
+	}
+	for _, paciente := range pacientes {
+		if paciente.IdPaciente == id {
+			return paciente, nil
+		}
+	}
+	return domain.Paciente{}, errors.New("PACIENTE INEXISTENTE")
+}
+
+func (s *jsonStore) CreatePaciente(paciente domain.Paciente) error {
+	pacientes, err := s.loadPacientes()
+	if err != nil {
+		return err
+	}
+	paciente.IdPaciente = len(pacientes) + 1
+	pacientes = append(pacientes, paciente)
+	return s.savePacientes(pacientes)
+}
+
+func (s *jsonStore) UpdatePaciente(paciente domain.Paciente) error {
+	pacientes, err := s.loadPacientes()
+	if err != nil {
+		return err
+	}
+	for i, p := range pacientes {
+		if p.IdPaciente == paciente.IdPaciente {
+			pacientes[i] = paciente
+			return s.savePacientes(pacientes)
+		}
+	}
+	return errors.New("ERROR AL ACTUALIZAR UN PACIENTE")
+}
+
+func (s *jsonStore) DeletePaciente(id int) error {
+	pacientes, err := s.loadPacientes()
+	if err != nil {
+		return err
+	}
+	for i, p := range pacientes {
+		if p.IdPaciente == id {
+			pacientes = append(pacientes[:i], pacientes[i+1:]...)
+			return s.savePacientes(pacientes)
+		}
+	}
+	return errors.New("ERROR AL ELIMINAR UN PACIENTE")
+}
+
+/* func (s *jsonStore) ExistsPaciente(dniPaciente string) bool {
+	pacientes, err := s.loadPacientes()
+	if err != nil {
+		return false
+	}
+	for _, p := range pacientes {
+		if p.DniPaciente == dniPaciente {
 			return true
 		}
 	}

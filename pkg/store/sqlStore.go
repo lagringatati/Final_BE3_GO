@@ -17,6 +17,7 @@ func NewSqlStore(db *sql.DB) StoreInterface {
 	}
 }
 
+// ///////////////////////////////////ODONTOLOGOS///////////////////////////////////////
 func (s *sqlStore) Create(odontologo domain.Odontologo) error {
 	query := "INSERT INTO odontologos (idOdontologo, nombreOdontologo, apellidoOdontologo, matriculaOdontologo) VALUES (?, ?, ?, ?);"
 	stmt, err := s.db.Prepare(query)
@@ -97,3 +98,69 @@ func (s *sqlStore) Delete(id int) error {
 	return exists
 }
 */
+
+// ///////////////////////////////////PACIENTES///////////////////////////////////////
+func (s *sqlStore) CreatePaciente(paciente domain.Paciente) error {
+	query := "INSERT INTO pacientes (idPaciente, nombrePaciente, apellidoPaciente, domicilioPaciente, dniPaciente, fechaDeAltaPaciente) VALUES (?, ?, ?, ?, ?, ?);"
+	stmt, err := s.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+	fmt.Println(paciente)
+	res, err := stmt.Exec(paciente.IdPaciente, paciente.NombrePaciente, paciente.ApellidoPaciente, paciente.DomicilioPaciente, paciente.DniPaciente, paciente.FechaDeAltaPaciente)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Println(res)
+	_, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *sqlStore) ReadPaciente(id int) (domain.Paciente, error) {
+	var paciente domain.Paciente
+	query := "SELECT * FROM pacientes WHERE idPaciente = ?;"
+	row := s.db.QueryRow(query, id)
+	err := row.Scan(&paciente.IdPaciente, &paciente.NombrePaciente, &paciente.ApellidoPaciente, &paciente.DomicilioPaciente, &paciente.DniPaciente, &paciente.FechaDeAltaPaciente)
+	if err != nil {
+		return domain.Paciente{}, err
+	}
+	return paciente, nil
+}
+
+func (s *sqlStore) UpdatePaciente(paciente domain.Paciente) error {
+	query := "UPDATE pacientes SET nombrePaciente = ?, apellidoPaciente = ?, domicilioPaciente = ?, dniPaciente = ?, fechaDeAltaPaciente = ? WHERE idPaciente = ?;"
+	stmt, err := s.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+	res, err := stmt.Exec(paciente.NombrePaciente, paciente.ApellidoPaciente, paciente.DomicilioPaciente, paciente.DniPaciente, paciente.FechaDeAltaPaciente, paciente.IdPaciente)
+	if err != nil {
+		return err
+	}
+	_, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *sqlStore) DeletePaciente(id int) error {
+	query := "DELETE FROM pacientes WHERE idPaciente = ?;"
+	stmt, err := s.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+	res, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+	_, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	return nil
+}
