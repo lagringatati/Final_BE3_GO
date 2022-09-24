@@ -230,11 +230,11 @@ func (s *jsonStore) obtenerIdPaciente(dni string) (int, error) {
 }
 */
 // POST --> CreateTurnoSpecial crea un nuevo turno con el DNI del paciente y la matricula del odontologo
-func (h *turnoHandler) CreateTurnoSpecial() gin.HandlerFunc {
+/* func (h *turnoHandler) CreateTurnoSpecial() gin.HandlerFunc {
 	return nil
-}
+} */
 
 // GET --> GetTurnoByDni obtiene un turno por DNI del paciente
-func (h *turnoHandler) GetTurnoByDni() gin.HandlerFunc {
+/* func (h *turnoHandler) GetTurnoByDni() gin.HandlerFunc {
 	return nil
-}
+} */

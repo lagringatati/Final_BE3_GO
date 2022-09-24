@@ -75,13 +75,13 @@ func main() {
 	// determino las uris de turno
 	turnos := engine.Group("/api/v1/turnos")
 	{
-		turnos.POST("", turnoHandler.CreateTurno())                                         //crear turno
-		turnos.GET(":idTurno", turnoHandler.GetTurnoByID())                                 //obtener turno por id
-		turnos.PUT(":idTurno", turnoHandler.UpdateTurno())                                  //actualizar un turno
-		turnos.PATCH(":idTurno", turnoHandler.UpdateTurnoForField())                        //actualizar un turno por alguno de sus campos
-		turnos.DELETE(":idTurno", turnoHandler.DeleteTurno())                               //eliminar un turno
-		turnos.POST(":dniPaciente :matriculaOdontologo", turnoHandler.CreateTurnoSpecial()) //crear turno "especial"
-		turnos.GET(":dniPaciente", turnoHandler.GetTurnoByDni())                            //obtener turno por DNI del paciente
+		turnos.POST("", turnoHandler.CreateTurno())                  //crear turno
+		turnos.GET(":idTurno", turnoHandler.GetTurnoByID())          //obtener turno por id
+		turnos.PUT(":idTurno", turnoHandler.UpdateTurno())           //actualizar un turno
+		turnos.PATCH(":idTurno", turnoHandler.UpdateTurnoForField()) //actualizar un turno por alguno de sus campos
+		turnos.DELETE(":idTurno", turnoHandler.DeleteTurno())        //eliminar un turno
+		//	turnos.POST(":dniPaciente :matriculaOdontologo", turnoHandler.CreateTurnoSpecial()) //crear turno "especial"
+		//	turnos.GET(":dniPaciente", turnoHandler.GetTurnoByDni())                            //obtener turno por DNI del paciente
 
 	}
 
