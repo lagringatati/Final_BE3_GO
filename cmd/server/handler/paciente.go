@@ -21,7 +21,7 @@ func NewPacienteHandler(s paciente.Service) *pacienteHandler {
 	}
 }
 
-// POST --> CreatePaciente crea un nuevo aciente
+// POST --> CreatePaciente crea un nuevo paciente
 func (h *pacienteHandler) CreatePaciente() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var paciente domain.Paciente

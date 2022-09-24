@@ -11,6 +11,7 @@ import (
 	"github.com/lagringatati/Final_BE3_GO/cmd/server/handler"
 	"github.com/lagringatati/Final_BE3_GO/internal/odontologo"
 	"github.com/lagringatati/Final_BE3_GO/internal/paciente"
+	"github.com/lagringatati/Final_BE3_GO/internal/turno"
 	"github.com/lagringatati/Final_BE3_GO/pkg/store"
 )
 
@@ -45,6 +46,10 @@ func main() {
 	servicePaciente := paciente.NewService(repoPaciente)
 	pacienteHandler := handler.NewPacienteHandler(servicePaciente)
 
+	repoTurno := turno.NewRepository(storage)
+	serviceTurno := turno.NewService(repoTurno)
+	turnoHandler := handler.NewTurnoHandler(serviceTurno)
+
 	// inicializo el engine utilizando gin
 	engine := gin.Default()
 
@@ -73,6 +78,19 @@ func main() {
 		pacientes.PUT(":idPaciente", pacienteHandler.UpdatePaciente())           //actualizar un paciente
 		pacientes.PATCH(":idPaciente", pacienteHandler.UpdatePacienteForField()) //actualizar un paciente por alguno de sus campos
 		pacientes.DELETE(":idPaciente", pacienteHandler.DeletePaciente())        //eliminar un paciente
+
+	}
+
+	// determino las uris de turno
+	turnos := engine.Group("/api/v1/turnos")
+	{
+		turnos.POST("", turnoHandler.CreateTurno())                  //crear turno
+		turnos.GET(":idTurno", turnoHandler.GetTurnoByID())          //obtener turno por id
+		turnos.PUT(":idTurno", turnoHandler.UpdateTurno())           //actualizar un turno
+		turnos.PATCH(":idTurno", turnoHandler.UpdateTurnoForField()) //actualizar un turno por alguno de sus campos
+		turnos.DELETE(":idTurno", turnoHandler.DeleteTurno())        //eliminar un turno
+		// turnos.POST(":dniPaciente", ":matriculaOdontologo", turnoHandler.CreateTurnoSpecial()) //crear turno "especial"
+		// turnos.GET(":dniPaciente", turnoHandler.GetTurnoByDni())                               //obtener turno por DNI del paciente
 
 	}
 

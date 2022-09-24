@@ -164,3 +164,69 @@ func (s *sqlStore) DeletePaciente(id int) error {
 	}
 	return nil
 }
+
+// ///////////////////////////////////TURNOS///////////////////////////////////////
+func (s *sqlStore) CreateTurno(turno domain.Turno) error {
+	query := "INSERT INTO turnos (idTurno, descripcionTurno, fechaTurno, idOdontologo, idPaciente) VALUES (?, ?, ?, ?, ?);"
+	stmt, err := s.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+	fmt.Println(turno)
+	res, err := stmt.Exec(turno.IdTurno, turno.DescripcionTurno, turno.FechaTurno, turno.IdOdontologo, turno.IdPaciente)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Println(res)
+	_, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *sqlStore) ReadTurno(id int) (domain.Turno, error) {
+	var turno domain.Turno
+	query := "SELECT * FROM turnos WHERE idTurno = ?;"
+	row := s.db.QueryRow(query, id)
+	err := row.Scan(&turno.IdTurno, &turno.DescripcionTurno, &turno.FechaTurno, &turno.IdOdontologo, &turno.IdPaciente)
+	if err != nil {
+		return domain.Turno{}, err
+	}
+	return turno, nil
+}
+
+func (s *sqlStore) UpdateTurno(turno domain.Turno) error {
+	query := "UPDATE turnos SET descripcionTurno = ?, fechaTurno = ?, idOdontologo = ?, idPaciente = ? WHERE idTurno = ?;"
+	stmt, err := s.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+	res, err := stmt.Exec(turno.DescripcionTurno, turno.FechaTurno, turno.IdOdontologo, turno.IdPaciente, turno.IdTurno)
+	if err != nil {
+		return err
+	}
+	_, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *sqlStore) DeleteTurno(id int) error {
+	query := "DELETE FROM turnos WHERE idTurno = ?;"
+	stmt, err := s.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+	res, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+	_, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	return nil
+}

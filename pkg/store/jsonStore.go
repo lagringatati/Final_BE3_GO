@@ -211,3 +211,88 @@ func (s *jsonStore) DeletePaciente(id int) error {
 	return false
 }
 */
+// /////////////////////////////////////////////////////////TURNOS//////////////////////////////////////////////////////////////
+// loadTurnos carga los turnos desde un archivo json
+func (s *jsonStore) loadTurnos() ([]domain.Turno, error) {
+	var turnos []domain.Turno
+	file, err := os.ReadFile(s.pathToFile)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal([]byte(file), &turnos)
+	if err != nil {
+		return nil, err
+	}
+	return turnos, nil
+}
+
+// saveTurnos guarda los turnos en un archivo json
+func (s *jsonStore) saveTurnos(turnos []domain.Turno) error {
+	bytes, err := json.Marshal(turnos)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(s.pathToFile, bytes, 0644)
+}
+
+// NewJsonStoreTurno crea un nuevo store de turnos
+func NewJsonStoreTurno(path string) StoreInterface {
+	_, err := os.Stat(path)
+	if err != nil {
+		panic(err)
+	}
+	return &jsonStore{
+		pathToFile: path,
+	}
+}
+
+func (s *jsonStore) ReadTurno(id int) (domain.Turno, error) {
+	turnos, err := s.loadTurnos()
+	if err != nil {
+		return domain.Turno{}, err
+	}
+	for _, turno := range turnos {
+		if turno.IdTurno == id {
+			return turno, nil
+		}
+	}
+	return domain.Turno{}, errors.New("TURNO INEXISTENTE")
+}
+
+func (s *jsonStore) CreateTurno(turno domain.Turno) error {
+	turnos, err := s.loadTurnos()
+	if err != nil {
+		return err
+	}
+	turno.IdTurno = len(turnos) + 1
+	turnos = append(turnos, turno)
+	return s.saveTurnos(turnos)
+}
+
+func (s *jsonStore) UpdateTurno(turno domain.Turno) error {
+	turnos, err := s.loadTurnos()
+	if err != nil {
+		return err
+	}
+	for i, p := range turnos {
+		if p.IdTurno == turno.IdTurno {
+			turnos[i] = turno
+			return s.saveTurnos(turnos)
+		}
+	}
+	return errors.New("ERROR AL ACTUALIZAR UN TURNO")
+}
+
+func (s *jsonStore) DeleteTurno(id int) error {
+	turnos, err := s.loadTurnos()
+	if err != nil {
+		return err
+	}
+	for i, p := range turnos {
+		if p.IdTurno == id {
+			turnos = append(turnos[:i], turnos[i+1:]...)
+			return s.saveTurnos(turnos)
+		}
+	}
+	return errors.New("ERROR AL ELIMINAR UN TURNO")
+}
