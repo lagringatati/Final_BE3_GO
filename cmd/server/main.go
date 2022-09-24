@@ -4,8 +4,6 @@ import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
-	/*"encoding/json"
-	"log"*/
 
 	"github.com/gin-gonic/gin"
 	"github.com/lagringatati/Final_BE3_GO/cmd/server/handler"
@@ -14,16 +12,6 @@ import (
 	"github.com/lagringatati/Final_BE3_GO/internal/turno"
 	"github.com/lagringatati/Final_BE3_GO/pkg/store"
 )
-
-/*type turno struct {
-	IdTurno      int
-	IdPaciente   int
-	IdOdontologo int
-	FechaTurno   string
-	HoraTurno    string
-	Descripcion  string
-}
-*/
 
 func main() {
 
@@ -38,14 +26,17 @@ func main() {
 
 	storage := store.NewSqlStore(db)
 
+	// handler odontologo
 	repo := odontologo.NewRepository(storage)
 	service := odontologo.NewService(repo)
 	odontologoHandler := handler.NewOdontologoHandler(service)
 
+	// handler paciente
 	repoPaciente := paciente.NewRepository(storage)
 	servicePaciente := paciente.NewService(repoPaciente)
 	pacienteHandler := handler.NewPacienteHandler(servicePaciente)
 
+	// handler turno
 	repoTurno := turno.NewRepository(storage)
 	serviceTurno := turno.NewService(repoTurno)
 	turnoHandler := handler.NewTurnoHandler(serviceTurno)
@@ -84,13 +75,13 @@ func main() {
 	// determino las uris de turno
 	turnos := engine.Group("/api/v1/turnos")
 	{
-		turnos.POST("", turnoHandler.CreateTurno())                  //crear turno
-		turnos.GET(":idTurno", turnoHandler.GetTurnoByID())          //obtener turno por id
-		turnos.PUT(":idTurno", turnoHandler.UpdateTurno())           //actualizar un turno
-		turnos.PATCH(":idTurno", turnoHandler.UpdateTurnoForField()) //actualizar un turno por alguno de sus campos
-		turnos.DELETE(":idTurno", turnoHandler.DeleteTurno())        //eliminar un turno
-		// turnos.POST(":dniPaciente", ":matriculaOdontologo", turnoHandler.CreateTurnoSpecial()) //crear turno "especial"
-		// turnos.GET(":dniPaciente", turnoHandler.GetTurnoByDni())                               //obtener turno por DNI del paciente
+		turnos.POST("", turnoHandler.CreateTurno())                                         //crear turno
+		turnos.GET(":idTurno", turnoHandler.GetTurnoByID())                                 //obtener turno por id
+		turnos.PUT(":idTurno", turnoHandler.UpdateTurno())                                  //actualizar un turno
+		turnos.PATCH(":idTurno", turnoHandler.UpdateTurnoForField())                        //actualizar un turno por alguno de sus campos
+		turnos.DELETE(":idTurno", turnoHandler.DeleteTurno())                               //eliminar un turno
+		turnos.POST(":dniPaciente :matriculaOdontologo", turnoHandler.CreateTurnoSpecial()) //crear turno "especial"
+		turnos.GET(":dniPaciente", turnoHandler.GetTurnoByDni())                            //obtener turno por DNI del paciente
 
 	}
 

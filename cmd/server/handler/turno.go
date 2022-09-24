@@ -214,9 +214,9 @@ func (h *turnoHandler) DeleteTurno() gin.HandlerFunc {
 	}
 	return 0, errors.New("ODONTOLOGO INEXISTENTE")
 }
-*/
+
 // obtenerIdPaciente obtiene el id del paciente mediante su DNI
-/* func (s *jsonStore) obtenerIdPaciente(dni string) (int, error) {
+func (s *jsonStore) obtenerIdPaciente(dni string) (int, error) {
 	pacientes, err := s.loadPacientes()
 	if err != nil {
 		return 0, err
@@ -226,77 +226,15 @@ func (h *turnoHandler) DeleteTurno() gin.HandlerFunc {
 			return paciente.IdPaciente, nil
 		}
 	}
-	return 0, errors.New("ODONTOLOGO INEXISTENTE")
-} */
-
-// POST --> CreateTurnoSpecial crea un nuevo turno con el DNI del paciente y la matricula del odontologo
-/* func (h *turnoHandler) CreateTurnoSpecial() gin.HandlerFunc {
-
-	return func(c *gin.Context) {
-
-		matO := c.Param("matriculaOdontologo")
-		m, err := strconv.Atoi(matO)
-		if err != nil {
-			web.Failure(c, 400, errors.New("MATRICULA INVALIDA"))
-			return
-		}
-
-		idO, err = h.s.obtenerIdOdontologo(m)
-		if err != nil {
-			web.Failure(c, 404, errors.New("MATRICULA INEXISTENTE"))
-			return
-		}
-
-		dniP := c.Param("dniPaciente")
-		dn, err := strconv.Atoi(dniP)
-		if err != nil {
-			web.Failure(c, 400, errors.New("DNI INVALIDO"))
-			return
-		}
-
-		idP, err = h.s.obtenerIdPaciente(dn)
-		if err != nil {
-			web.Failure(c, 404, errors.New("DNI INEXISTENTE"))
-			return
-		}
-
-		var turno domain.Turno
-
-		turno.IdPaciente:=idP
-		turno.IdOdontologo:=idO
-
-		err := c.ShouldBindJSON(&turno)
-		if err != nil {
-			web.Failure(c, 400, errors.New("JSON DE TURNO INVALIDO"))
-			return
-		}
-
-		p, err := h.s.CreateTurnoSpecial(turno)
-		if err != nil {
-			web.Failure(c, 400, err)
-			return
-		}
-		web.Success(c, 201, p, "TURNO CREADO CORRECTAMENTE")
-	}
+	return 0, errors.New("PACIENTE INEXISTENTE")
 }
 */
+// POST --> CreateTurnoSpecial crea un nuevo turno con el DNI del paciente y la matricula del odontologo
+func (h *turnoHandler) CreateTurnoSpecial() gin.HandlerFunc {
+	return nil
+}
+
 // GET --> GetTurnoByDni obtiene un turno por DNI del paciente
-/* func (h *turnoHandler) GetTurnoByDni() gin.HandlerFunc {
-	return func(c *gin.Context) {
-
-		dniParam := c.Param("dniPaciente")
-		dn, err := strconv.Atoi(dniParam)
-		if err != nil {
-			web.Failure(c, 400, errors.New("DNI INVALIDO"))
-			return
-		}
-
-		//busco TODOS los turnos y hago un for buscando los q coincidan con el dni
-		turno, err := h.s.GetTurnoByID(id)
-		if err != nil {
-			web.Failure(c, 404, errors.New("TURNO NO ENCONTRADO"))
-			return
-		}
-		web.Success(c, 200, turno, "TURNO OBTENIDO POR ID")
-	}
-} */
+func (h *turnoHandler) GetTurnoByDni() gin.HandlerFunc {
+	return nil
+}

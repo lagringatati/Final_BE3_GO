@@ -51,10 +51,10 @@ func (s *service) UpdateTurno(id int, u domain.Turno) (domain.Turno, error) {
 	if u.FechaTurno != "" {
 		p.FechaTurno = u.FechaTurno
 	}
-	if u.IdOdontologo != "" {
+	if u.IdOdontologo != 0 {
 		p.IdOdontologo = u.IdOdontologo
 	}
-	if u.IdPaciente != "" {
+	if u.IdPaciente != 0 {
 		p.IdPaciente = u.IdPaciente
 	}
 	p, err = s.r.UpdateTurno(id, p)
